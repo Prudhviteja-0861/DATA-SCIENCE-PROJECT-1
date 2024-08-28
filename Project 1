@@ -1,0 +1,77 @@
+from google.colab import drive
+drive.mount('/content/drive')
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pandas import read_csv
+path = "/content/drive/MyDrive/energy.csv"
+electricity = pd.read_csv(path)
+print(electricity)
+print(electricity.shape)
+print(electricity.head(5))
+print(electricity.tail(4))
+print(electricity.info())
+print(electricity.describe())
+
+
+print("Column Data")
+print(electricity.columns)
+
+print(electricity[electricity['State'].str.startswith('M')])
+print(electricity[electricity['State'].str.endswith('a')])
+#rcb = electricity[electricity['State'] == 'Andhra']
+rcb = electricity[electricity['State'] == 'Manipur']
+print(len(rcb))
+
+
+
+print(electricity.sort_values(by='State'))
+print(np.max(electricity['Consumption']))
+print(np.min(electricity['Consumption']))
+print(np.mean(electricity['Consumption']))
+
+print(electricity[electricity['State']== 'Andhra']['Consumption'].max())
+print(electricity[electricity['State']== 'Andhra']['Consumption'].mean())
+print(electricity[electricity['State']== 'Andhra']['Consumption'].min())
+print(electricity[electricity['State']== 'Andhra']['Consumption'].median())
+
+
+state1_data = electricity[electricity.State == 'Andhra']
+print("Andhra Data")
+print(state1_data)
+state2_data = electricity[electricity.State == 'karnataka']
+print("Karnataka Data")
+print(state2_data)
+state4_data = electricity[electricity.State == 'Telengana']
+state5_data = electricity[electricity.State == 'Tripura']
+
+
+# line chart
+fig,axes = plt.subplots(2)
+axes[0].plot(state1_data['Date'],state1_data['Consumption'],marker = '*',color = 'red')
+axes[1].plot(state4_data['Date'],state1_data['Consumption'],marker = '^',color = 'green')
+
+#bar chart
+
+fig,axes1 = plt.subplots(2)
+axes1[0].bar(state4_data['Date'],state1_data['Consumption'],color = 'yellow')
+axes1[1].bar(state5_data['Date'],state1_data['Consumption'],color = 'pink')
+
+
+#pie chart
+
+fig2, axes2 = plt.subplots(2)
+state1 = 'Up'
+state2 = 'Kerala'
+state4 = 'Mizoram'
+state5 = 'Delhi'
+labels = [state1,state2,state4,state5]
+state1_total = electricity[electricity['State'] == state1]['Consumption'].sum()
+state2_total = electricity[electricity['State'] == state2]['Consumption'].sum()
+state4_total = electricity[electricity['State'] == state4]['Consumption'].sum()
+state5_total = electricity[electricity['State'] == state5]['Consumption'].sum()
+#'energy shoulb be list of numerikcal values
+
+energy = [state1_total,state2_total,state4_total,state5_total]
+axes2[0].pie(energy,labels = labels,autopct = '%1.1f%%')
